@@ -1,11 +1,35 @@
 "use client";
+import axios from "axios";
 import Link from "next/link";
-import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 const SignupPage = () => {
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+  const [buttonDisabled, setButtonDisabled] = useState(false);
   const [user, setUser] = useState({ email: "", password: "", username: "" });
 
-  const onSignup = async () => {};
+  useEffect(() => {
+    if (user.email.length && user.password.length && user.username.length) {
+      setButtonDisabled(false);
+    } else {
+      setButtonDisabled(true);
+    }
+  }, [user]);
+
+  const onSignup = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.post("/api/users/signup", user);
+      router.push("/login");
+    } catch (error: any) {
+      console.log("Client-side Error: ", error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen">
       <h1 className="text-2xl font-bold mb-4">Signup</h1>
@@ -16,7 +40,7 @@ const SignupPage = () => {
         onChange={(e) => {
           setUser({ ...user, [e.target.name]: e.target.value });
         }}
-        className="border border-gray-300 rounded p-2 mb-2"
+        className="border border-gray-300 rounded p-2 mb-2 text-black"
         placeholder="Username"
       />
       <input
@@ -26,7 +50,7 @@ const SignupPage = () => {
         onChange={(e) => {
           setUser({ ...user, [e.target.name]: e.target.value });
         }}
-        className="border border-gray-300 rounded p-2 mb-2"
+        className="border border-gray-300 rounded p-2 mb-2 text-black"
         placeholder="Email"
       />
       <input
@@ -36,14 +60,15 @@ const SignupPage = () => {
         onChange={(e) => {
           setUser({ ...user, [e.target.name]: e.target.value });
         }}
-        className="border border-gray-300 rounded p-2 mb-2"
+        className="border border-gray-300 rounded p-2 mb-2 text-black"
         placeholder="Password"
       />
       <button
         onClick={onSignup}
+        disabled={buttonDisabled}
         className="bg-blue-500 text-white rounded px-4 py-2 mb-2"
       >
-        Signup
+        {loading ? "In process" : "Signup"}
       </button>
       <p>
         Already have an account? <Link href="/login">Login</Link>
