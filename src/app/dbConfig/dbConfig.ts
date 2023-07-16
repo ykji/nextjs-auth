@@ -11,7 +11,7 @@ export async function connect() {
 
     connection.on("error", (error) => {
       console.log(
-        "MongoDB connection error. Please make sure MongoDB is running. ",
+        "MongoDB connection error. Please make sure MongoDB is running.",
         error
       );
       process.exit();
