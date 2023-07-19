@@ -22,7 +22,8 @@ const SignupPage = () => {
     try {
       setLoading(true);
       const response = await axios.post("/api/users/signup", user);
-      router.push("/login");
+      console.log("hogya signup");
+      router.push("/");
     } catch (error: any) {
       console.log("Client-side Error: ", error.message);
     } finally {

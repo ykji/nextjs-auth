@@ -1,5 +1,1 @@
-Learnt more about Next.js by building this authentication service.
-
-TODO: 
-0. Add proper validation for email and username.
-1. Add more features to it.
+I built this project for the sole purpose of learning the new App Router in Next.js. Please excuse me if you don't find any responsiveness here.

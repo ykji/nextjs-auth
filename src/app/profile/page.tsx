@@ -8,6 +8,8 @@ import { useRouter } from "next/navigation";
 export default function ProfilePage() {
   const router = useRouter();
   const [data, setData] = useState("nothing");
+  const [loadingDetails, setLoadingDetails] = useState(false);
+
   const logout = async () => {
     try {
       await axios.get("/api/users/logout");
@@ -20,8 +22,15 @@ export default function ProfilePage() {
   };
 
   const getUserDetails = async () => {
-    const res = await axios.get("/api/users/me");
-    setData(res.data.data._id);
+    try {
+      setLoadingDetails(true);
+      const res = await axios.get("/api/users/me");
+      setData(res.data.data._id);
+    } catch (error: any) {
+      console.log("Client-side Error: ", error.message);
+    } finally {
+      setLoadingDetails(false);
+    }
   };
 
   return (
@@ -33,6 +42,12 @@ export default function ProfilePage() {
       >
         Logout
       </button>
+      <a
+        href="/"
+        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded absolute right-36 top-12"
+      >
+        Home
+      </a>
       <div className="flex flex-col grow items-center justify-center h-full py-2">
         <h2 className="px-3 py-2 border-4 bg-green-500">
           {data === "nothing" ? (
@@ -43,9 +58,9 @@ export default function ProfilePage() {
         </h2>
         <button
           onClick={getUserDetails}
-          className="bg-green-800 mt-4 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          className="bg-green-800 mt-4 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
         >
-          Get User Details (Id)
+          {loadingDetails ? "Getting..." : "Get User Details"}
         </button>
       </div>
     </div>
